@@ -4,6 +4,7 @@
 
 import numpy as np
 
+
 # find k neighbors
 def knn(train_x, t_index, k):
     data_num = train_x.shape[0]
@@ -48,7 +49,11 @@ def knn_test(train_x, t, k):
 
     return neighbors
 
-def evaluation(test_y, predict):
+def evaluation():
+    test_y = np.load('prepare_data/test_y.npy')
+    predict = np.load('parameter_data/predict.npy')
+    test_y = test_y.astype(np.int)
+
     hamming_loss = HammingLoss(test_y, predict)
     print('hamming_loss = ', hamming_loss)
 
@@ -138,13 +143,13 @@ class MLKNN(object):
     def test(self):
         test_x = np.load('prepare_data/test_x.npy')
         test_y = np.load('prepare_data/test_y.npy')
-        predict = np.zeros(test_y.shape)
+        predict = np.zeros(test_y.shape, dtype=np.int)
         test_data_num = test_x.shape[0]
 
         for i in range(test_data_num):
             neighbors = knn_test(self.train_x, test_x[i], k)
 
-            for j in self.label_num:
+            for j in range(self.label_num):
                 temp = 0
                 for nei in neighbors:
                     temp = temp + int(self.train_y[int(nei)][j])
@@ -155,7 +160,7 @@ class MLKNN(object):
                     predict[i][j] = 0
 
         np.save('parameter_data/predict.npy', predict)
-        #evaluation(test_y, predict)
+
 if __name__ == '__main__':
     k = 10
     s = 1
@@ -163,6 +168,9 @@ if __name__ == '__main__':
     train_y = np.load('prepare_data/train_y.npy')
 
     mlknn = MLKNN(train_x, train_y, k, s)
-    mlknn.train()
-    mlknn.save()
-    mlknn.test()
+    #mlknn.train()
+    #mlknn.save()
+    #mlknn.load()
+    #mlknn.test()
+
+    evaluation()
