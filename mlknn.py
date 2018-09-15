@@ -94,7 +94,7 @@ class MLKNN(object):
 
             for j in range(self.data_num):
                 temp = 0
-                neighbors = self.knn(self.train_x, self.train_x(j), self.k)
+                neighbors = self.knn(self.train_x, self.train_x[j], self.k)
 
                 for nei in neighbors:
                     temp = temp + self.train_y[nei][i]
@@ -124,13 +124,21 @@ class MLKNN(object):
     def test(self):
         test_x = np.load('prepare_data/test_x.npy')
         test_y = np.load('prepare_data/test_y.npy')
-
+        predict = np.array(test_y.shape)
         test_data_num = test_x.shape(0)
 
         for i in range(test_data_num):
             neighbors = knn_test(self.train_x, test_x[i], k)
 
+            for j in self.label_num:
+                temp = 0
+                for nei in neighbors:
+                    temp = temp + self.train_y[nei][j]
 
+                if(self.Ph1[j] * self.Peh1[j][temp] > self.Ph0[j] * self.Peh0[j][temp]):
+                    predict[i][j] = 1
+                else:
+                    predict[i][j] = 0
 if __name__ == '__main__':
     k = 10
     s = 1
