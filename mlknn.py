@@ -3,8 +3,6 @@
 # @FileName: mlknn.py
 
 import numpy as np
-import tensorflow as tf
-
 
 # find k neighbors
 def knn(train_x, t_index, k):
@@ -50,6 +48,23 @@ def knn_test(train_x, t, k):
 
     return neighbors
 
+def evaluation(test_y, predict):
+    hamming_loss = HammingLoss(test_y, predict)
+    print('hamming_loss = ', hamming_loss)
+
+def HammingLoss(test_y, predict):
+    label_num = test_y.shape[1]
+    test_data_num = test_y.shape[0]
+    hamming_loss = 0
+    temp = 0
+    for i in range(test_data_num):
+        temp = temp + np.sum(test_y[i] ^ predict[i])
+
+    hamming_loss = temp / label_num / test_data_num
+
+    return hamming_loss
+
+
 class MLKNN(object):
     s = 1
     k = 10
@@ -70,34 +85,33 @@ class MLKNN(object):
         self.train_y = train_y
         self.label_num = train_y.shape[1]
         self.train_data_num = train_x.shape[0]
-        self.Ph1 = np.zeros((self.labels_num,))
-        self.Ph0 = np.zeros((self.labels_num,))
-        self.Peh1 = np.zeros((self.labels_num, self.k + 1))
-        self.Peh0 = np.zeros((self.labels_num, self.k + 1))
+        self.Ph1 = np.zeros(self.label_num)
+        self.Ph0 = np.zeros(self.label_num)
+        self.Peh1 = np.zeros([self.label_num, self.k + 1])
+        self.Peh0 = np.zeros([self.label_num, self.k + 1])
 
     def train(self):
         #computing the prior probabilities
         for i in range(self.label_num):
             cnt = 0
-            for j in range(self.data_num):
+            for j in range(self.train_data_num):
                 if self.train_y[j][i] == 1:
                     cnt = cnt + 1
-            self.Ph1[i] = (self.s + cnt) / (self.s * 2 + self.data_num)
+            self.Ph1[i] = (self.s + cnt) / (self.s * 2 + self.train_data_num)
             self.Ph0[i] = 1 - self.Ph1[i]
 
-        #computing the posterior probabilities
-        Peh1 = np.zeros(self.data_num, self.k + 1)
-        Peh0 = np.zeros(self.data_num, self.k + 1)
         for i in range(self.label_num):
+
+            print('training for label\n', i + 1)
             c1 = np.zeros(self.k + 1)
             c0 = np.zeros(self.k + 1)
 
-            for j in range(self.data_num):
+            for j in range(self.train_data_num):
                 temp = 0
-                neighbors = self.knn(self.train_x, self.train_x[j], self.k)
+                neighbors = knn(self.train_x, j, self.k)
 
-                for nei in neighbors:
-                    temp = temp + self.train_y[nei][i]
+                for k in range(self.k):
+                    temp = temp + int(self.train_y[int(neighbors[k])][i])
 
                 if self.train_y[j][i] == 1:
                     c1[temp] = c1[temp] + 1
@@ -139,11 +153,16 @@ class MLKNN(object):
                     predict[i][j] = 1
                 else:
                     predict[i][j] = 0
+
+        np.save('parameter_data/predict.npy', predict)
+        #evaluation(test_y, predict)
 if __name__ == '__main__':
     k = 10
     s = 1
     train_x = np.load('prepare_data/train_x.npy')
     train_y = np.load('prepare_data/train_y.npy')
+
     mlknn = MLKNN(train_x, train_y, k, s)
     mlknn.train()
     mlknn.save()
+    mlknn.test()
