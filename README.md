@@ -1,16 +1,16 @@
 ﻿# MLKNN
-##Dataset
+## Dataset
 [http://mulan.sourceforge.net/datasets-mlc.html][1]
 
-###yeast
+### yeast
 |name | domain | instances |nominal	|numeric|labels|cardinality	|density|distinct
 | ------ | ------ | ------ |
 | yeast| biology | 2417	 |0|103	|14|4.237|0.303	|198
 
-##Requrements
+## Requrements
 - Python3.6
 - numpy
-##Reference
+## Reference
 [Ml-knn: A Lazy Learning Approach to
 Multi-Label Learning][2]
 
