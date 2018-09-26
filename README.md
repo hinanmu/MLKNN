@@ -3,9 +3,9 @@
 [http://mulan.sourceforge.net/datasets-mlc.html][1]
 
 ### yeast
-|name | domain | instances |nominal	|numeric|labels|cardinality	|density|distinct
-| ------ | ------ | ------ |
-| yeast| biology | 2417	 |0|103	|14|4.237|0.303	|198
+|name | domain | instances |nominal	|numeric|labels|cardinality	|density|distinct|
+| ------ | ------ | ------ |------ |------ |------ |------ |------ |------ |
+| yeast| biology | 2417	 |0|103	|14|4.237|0.303	|198|
 
 ## Requrements
 - Python3.6
