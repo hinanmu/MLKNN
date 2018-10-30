@@ -4,7 +4,6 @@
 
 import numpy as np
 
-
 # find k neighbors
 def knn(train_x, t_index, k):
     data_num = train_x.shape[0]
@@ -50,7 +49,7 @@ def knn_test(train_x, t, k):
     return neighbors
 
 def evaluation():
-    test_y = np.load('prepare_data/test_y.npy')
+    test_y = np.load('dataset/test_y.npy')
     predict = np.load('parameter_data/predict.npy')
     test_y = test_y.astype(np.int)
 
@@ -141,8 +140,8 @@ class MLKNN(object):
         Peh0 = np.load('parameter_data/Peh0.npy')
 
     def test(self):
-        test_x = np.load('prepare_data/test_x.npy')
-        test_y = np.load('prepare_data/test_y.npy')
+        test_x = np.load('dataset/test_x.npy')
+        test_y = np.load('dataset/test_y.npy')
         predict = np.zeros(test_y.shape, dtype=np.int)
         test_data_num = test_x.shape[0]
 
@@ -164,8 +163,8 @@ class MLKNN(object):
 if __name__ == '__main__':
     k = 10
     s = 1
-    train_x = np.load('prepare_data/train_x.npy')
-    train_y = np.load('prepare_data/train_y.npy')
+    train_x = np.load('dataset/train_x.npy')
+    train_y = np.load('dataset/train_y.npy')
 
     mlknn = MLKNN(train_x, train_y, k, s)
     #mlknn.train()
